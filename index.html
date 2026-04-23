@@ -413,14 +413,20 @@ p { margin: 0; }
   text-align: center;
   position: relative;
   z-index: 50;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .top-bar__inner {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: .6rem;
+  gap: .4rem .7rem;
   padding-inline: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  line-height: 1.35;
 }
 .top-bar__pulse {
   width: 8px;
@@ -429,11 +435,15 @@ p { margin: 0; }
   border-radius: 50%;
   box-shadow: 0 0 0 0 rgba(212, 0, 0, .6);
   animation: pulse 1.8s infinite;
+  flex-shrink: 0;
 }
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(212, 0, 0, .6); }
   70% { box-shadow: 0 0 0 10px rgba(212, 0, 0, 0); }
   100% { box-shadow: 0 0 0 0 rgba(212, 0, 0, 0); }
+}
+.top-bar__text {
+  white-space: normal;
 }
 .top-bar__sep { opacity: .5; }
 .top-bar__link {
@@ -441,8 +451,19 @@ p { margin: 0; }
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
+  white-space: nowrap;
 }
 .top-bar__link:hover { text-decoration-thickness: 2.5px; }
+
+/* Em telas estreitas (≤640px) empilhar os elementos em linhas separadas pra nunca cortar */
+@media (max-width: 640px) {
+  .top-bar { font-size: 0.78rem; padding: .55rem .5rem; }
+  .top-bar__sep { display: none; }
+  .top-bar__inner {
+    flex-direction: column;
+    gap: .25rem;
+  }
+}
 
 /* ----------------------------------------------
    5. HEADER
