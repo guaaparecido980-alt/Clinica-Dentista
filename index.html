@@ -512,17 +512,19 @@ p { margin: 0; }
   color: inherit;
 }
 .brand__mark {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   border-radius: 10px;
   object-fit: contain;
-  box-shadow: 0 4px 12px rgba(30, 111, 217, .25), 0 1px 3px rgba(5, 11, 20, .2);
+  background: #fff;
+  padding: 2px;
+  box-shadow: 0 2px 8px rgba(30, 111, 217, .18);
   transition: transform .3s var(--ease), box-shadow .3s;
 }
 .brand:hover .brand__mark {
   transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(30, 111, 217, .35), 0 2px 4px rgba(5, 11, 20, .25);
+  box-shadow: 0 4px 14px rgba(30, 111, 217, .3);
 }
 .brand__name {
   display: flex;
@@ -1894,12 +1896,13 @@ html.js-enabled .reveal.is-visible {
    ---------------------------------------------- */
 @media (max-width: 640px) {
   /* HEADER - compactação no mobile */
-  .brand__name strong { font-size: 1rem; }
-  .brand__name em { font-size: .65rem; opacity: .75; }  /* visível em mobile, compacto */
+  .brand__name strong { font-size: 1.05rem; }
+  .brand__name em { font-size: .68rem; opacity: .8; margin-top: 2px; }  /* visível em mobile, compacto */
   .header__cta span { display: none; }         /* esconde texto "WhatsApp", só ícone */
   .header__cta { padding: .6rem .8rem; }
   .header__cta svg { width: 20px; height: 20px; }
-  .brand__mark { width: 38px; height: 38px; }
+  .brand__mark { width: 46px; height: 46px; }  /* logo um pouquinho maior no mobile pra melhor visualização */
+  .brand { gap: .65rem; }
 
   /* TOP BAR - empilhar vertical */
   .top-bar__sep { display: none; }
