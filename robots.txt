@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maximadesentupidoradias.com.br/sitemap.xml
