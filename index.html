@@ -1782,6 +1782,42 @@ p { margin: 0; }
 }
 .footer__credit { color: rgba(255,255,255,.4); }
 
+/* Crédito do desenvolvedor — barra fina e elegante no fim de tudo */
+.footer__developer {
+  margin-top: 1.4rem;
+  padding: 1rem 0 1.2rem;
+  border-top: 1px solid rgba(255,255,255,.04);
+  text-align: center;
+}
+.footer__developer a {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--font-display);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.32);
+  text-decoration: none;
+  transition: color .25s var(--ease), transform .25s var(--ease);
+}
+.footer__developer a strong {
+  color: rgba(255,255,255,.55);
+  font-weight: 700;
+  transition: color .25s var(--ease);
+}
+.footer__developer a span {
+  color: #F5A623;
+  font-size: .85rem;
+  transition: transform .4s var(--ease);
+}
+.footer__developer a:hover {
+  color: #F5A623;
+  transform: translateY(-1px);
+}
+.footer__developer a:hover strong { color: #F5A623; }
+.footer__developer a:hover span { transform: rotate(180deg); }
+
 /* ----------------------------------------------
    16. BOTÕES FLUTUANTES (FAB)
    ---------------------------------------------- */
@@ -3178,6 +3214,15 @@ body.cookie-banner-active .fab--call { bottom: calc(var(--cookie-banner-h, 200px
     <div class="container footer__bottom-inner">
       <p>© <span data-year>2026</span> Máxima Desentupidora &amp; Encanadores. Todos os direitos reservados.</p>
       <p class="footer__credit">CNPJ 43.705.402/0001-02 · Curitiba/PR</p>
+    </div>
+  </div>
+
+  <!-- Crédito do desenvolvedor — link follow ajuda no SEO do criador -->
+  <div class="footer__developer">
+    <div class="container">
+      <a href="https://gustavodigital.online" target="_blank" rel="noopener" title="Criação de sites profissionais por Gustavo Digital">
+        Site desenvolvido por <strong>Gustavo Digital</strong> <span aria-hidden="true">✦</span>
+      </a>
     </div>
   </div>
 </footer>
