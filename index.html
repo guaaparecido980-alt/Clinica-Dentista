@@ -15,6 +15,58 @@
 <meta name="geo.position" content="-25.4284;-49.2733" />
 <meta name="ICBM" content="-25.4284, -49.2733" />
 
+<!-- ============================================================
+     GOOGLE ANALYTICS 4 (G-2RHKSPT71W)
+     Carregado com Consent Mode v2 - respeita o consentimento
+     de cookies LGPD configurado mais abaixo no site.
+     Por padrão, analytics fica DENIED até o usuário aceitar.
+     ============================================================ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2RHKSPT71W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  // Consent Mode v2 — bloqueia analytics até o usuário consentir (LGPD)
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  // Verifica se já tem consentimento salvo do banner de cookies
+  try {
+    var saved = JSON.parse(localStorage.getItem('maxima_cookie_consent') || 'null');
+    if (saved && saved.consent) {
+      gtag('consent', 'update', {
+        'analytics_storage': saved.consent.analytics ? 'granted' : 'denied',
+        'ad_storage': saved.consent.marketing ? 'granted' : 'denied',
+        'ad_user_data': saved.consent.marketing ? 'granted' : 'denied',
+        'ad_personalization': saved.consent.marketing ? 'granted' : 'denied'
+      });
+    }
+  } catch (e) { /* localStorage pode estar bloqueado */ }
+
+  gtag('js', new Date());
+  gtag('config', 'G-2RHKSPT71W', {
+    'anonymize_ip': true,
+    'send_page_view': true
+  });
+</script>
+
+<!-- ============================================================
+     GOOGLE TAG MANAGER (GTM-56KJSBRW)
+     Carregado APÓS o Consent Mode pra respeitar LGPD.
+     Permite gerenciar tags adicionais (Meta Pixel, Google Ads,
+     conversões, etc.) sem mexer mais no código.
+     ============================================================ -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-56KJSBRW');</script>
+
 <!-- Redirect HTTPS será adicionado quando o certificado SSL estiver emitido -->
 
 <!-- ============================================================
@@ -2369,6 +2421,11 @@ body.cookie-banner-active .fab--call { bottom: calc(var(--cookie-banner-h, 200px
 </head>
 <body>
 
+<!-- Google Tag Manager (noscript) - fallback pra navegadores sem JS -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-56KJSBRW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <!--  ========================================================================
       CHECKLIST INTERNO DE PUBLICAÇÃO (não visível ao cliente final)
       ========================================================================
@@ -3533,9 +3590,21 @@ body.cookie-banner-active .fab--call { bottom: calc(var(--cookie-banner-h, 200px
     applyConsent(record.consent);
   }
 
-  // Aplica as escolhas - prepara o Consent Mode do Google (pronto pra GTM)
+  // Aplica as escolhas - integra com Google Analytics 4 (Consent Mode v2)
   function applyConsent(consent) {
     window.dataLayer = window.dataLayer || [];
+
+    // Atualiza o Consent Mode do Google Analytics
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', {
+        'analytics_storage': consent.analytics ? 'granted' : 'denied',
+        'ad_storage': consent.marketing ? 'granted' : 'denied',
+        'ad_user_data': consent.marketing ? 'granted' : 'denied',
+        'ad_personalization': consent.marketing ? 'granted' : 'denied'
+      });
+    }
+
+    // Evento customizado pra GTM (caso seja adicionado no futuro)
     window.dataLayer.push({
       event: 'cookie_consent_update',
       consent_analytics: consent.analytics ? 'granted' : 'denied',
@@ -3638,6 +3707,139 @@ body.cookie-banner-active .fab--call { bottom: calc(var(--cookie-banner-h, 200px
   } else {
     setTimeout(showBanner, 600);
   }
+
+  // --------------------------------------------------------------
+  // 8. RASTREAMENTO DE CLIQUES — Google Analytics 4
+  //
+  // Captura automaticamente cliques em todos os botões importantes
+  // de conversão (WhatsApp, telefone) e envia eventos pro GA4.
+  // Identifica de qual seção/CTA o clique veio, pra você saber
+  // qual parte do site mais converte.
+  // --------------------------------------------------------------
+  function trackEvent(eventName, params) {
+    if (typeof gtag === 'function') {
+      gtag('event', eventName, params || {});
+    }
+    // também envia pro dataLayer (GTM se for adicionado depois)
+    if (window.dataLayer) {
+      window.dataLayer.push(Object.assign({event: eventName}, params || {}));
+    }
+  }
+
+  // Detecta a seção/origem de onde veio o clique
+  function detectarOrigem(el) {
+    // Tenta achar a seção pai
+    if (el.closest('.fab')) return 'fab_flutuante';
+    if (el.closest('.top-bar')) return 'topo_urgencia';
+    if (el.closest('.header')) return 'header';
+    if (el.closest('.hero')) return 'hero';
+    if (el.closest('.section--services')) {
+      // Identificar qual serviço específico
+      const card = el.closest('.service');
+      const titulo = card?.querySelector('h3')?.innerText || '';
+      return 'servico:' + titulo.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    }
+    if (el.closest('.section--why')) return 'diferenciais';
+    if (el.closest('.section--how')) return 'como_funciona';
+    if (el.closest('.section--when')) return 'quando_chamar';
+    if (el.closest('.section--areas')) return 'areas_atendidas';
+    if (el.closest('.section--proof')) return 'compromisso';
+    if (el.closest('.section--faq')) return 'faq';
+    if (el.closest('.section--cta')) return 'cta_final';
+    if (el.closest('.footer')) return 'rodape';
+    return 'outro';
+  }
+
+  // Listener global - captura cliques em qualquer link
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (!link || !link.href) return;
+
+    const href = link.href;
+
+    // CLIQUE NO WHATSAPP
+    if (href.includes('wa.me/') || href.includes('api.whatsapp.com')) {
+      const origem = detectarOrigem(link);
+      trackEvent('click_whatsapp', {
+        botao_texto: (link.innerText || link.getAttribute('aria-label') || '').trim().substring(0, 60),
+        origem: origem,
+        link_url: href
+      });
+      // Marca como conversão
+      trackEvent('generate_lead', {
+        method: 'whatsapp',
+        origem: origem
+      });
+    }
+
+    // CLIQUE EM LIGAR (telefone)
+    else if (href.startsWith('tel:')) {
+      const origem = detectarOrigem(link);
+      trackEvent('click_telefone', {
+        botao_texto: (link.innerText || link.getAttribute('aria-label') || '').trim().substring(0, 60),
+        origem: origem,
+        numero: href.replace('tel:', '')
+      });
+      // Marca como conversão
+      trackEvent('generate_lead', {
+        method: 'telefone',
+        origem: origem
+      });
+    }
+
+    // CLIQUE EM E-MAIL
+    else if (href.startsWith('mailto:')) {
+      trackEvent('click_email', {
+        origem: detectarOrigem(link),
+        email: href.replace('mailto:', '')
+      });
+    }
+
+    // CLIQUE EM POLÍTICA DE PRIVACIDADE
+    else if (href.includes('politica-de-privacidade')) {
+      trackEvent('click_politica', { origem: detectarOrigem(link) });
+    }
+
+    // CLIQUE EM LINK EXTERNO (Gustavo Digital, etc)
+    else if (link.hostname && link.hostname !== location.hostname && !href.startsWith('#')) {
+      trackEvent('click_externo', {
+        link_url: href,
+        link_dominio: link.hostname,
+        origem: detectarOrigem(link)
+      });
+    }
+  });
+
+  // Tracking adicional: cliques nos botões do banner de cookies
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-cookie-action]');
+    if (!btn) return;
+    trackEvent('cookie_consent_action', {
+      acao: btn.dataset.cookieAction
+    });
+  });
+
+  // Tracking de scroll profundo (mostra que o usuário leu o site)
+  let scrollMarcos = { 25: false, 50: false, 75: false, 90: false };
+  window.addEventListener('scroll', function() {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = Math.round((window.scrollY / total) * 100);
+    Object.keys(scrollMarcos).forEach(function(marco) {
+      if (!scrollMarcos[marco] && pct >= parseInt(marco)) {
+        scrollMarcos[marco] = true;
+        trackEvent('scroll_profundidade', { percentual: parseInt(marco) });
+      }
+    });
+  }, { passive: true });
+
+  // Tracking de tempo no site (engajamento real)
+  setTimeout(function() {
+    trackEvent('engajamento_30s', {});
+  }, 30000);
+
+  setTimeout(function() {
+    trackEvent('engajamento_2min', {});
+  }, 120000);
 
 })();
 
